@@ -6,12 +6,23 @@ Clicking gives points which can be used to upgrade the pathogen to make it more 
 You win by infecting the whole world population and killing them all before a cure can be created by the humans (opponent)
 
 
+
 ISPO
-Input:
-Mouse - Clicking and cursor movement, playing the game
-File reading - save files
 
-Storage:
-points
+INPUT
+Mouse input - Clicking and cursor movement, playing the game
+File input - save files
 
+STORAGE
+Variables: Infections, play time, lifetime infections, infections per second, deaths
+Dictionaries: Infectivity upgrades, Lethality upgrades, Resistance upgrades
 
+PROCESSING
+Process upgrades
+dynamically update number of infections and deaths
+load saves from text files
+write text files as saves
+
+OUTPUT
+tkinter window displaying game
+save files
