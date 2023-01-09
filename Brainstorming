@@ -1,1 +1,14 @@
+Contagion single player strategy-simulation game similiar to the game Plague Inc. 
+The goal of the game is to start as a pathogen in a country and infect more humans and score points by clicking a box on the gui.
+Clicking gives points which can be used to upgrade the pathogen to make it more infectious, deadly, resistant to treatment, etc
+You win by infecting the whole world population and killing them all before a cure can be created by the humans (opponent)
+
+
+ISPO
+Input:
+Mouse - Clicking and cursor movement, playing the game
+File reading - save files
+
+Storage:
+
 
