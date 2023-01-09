@@ -1,0 +1,26 @@
+Constants: Dictionary:
+  2 dictionaries for each category of upgrade, infectivity and lethality, the key is the name of the upgrade and the value the tier lvl of the upgrade
+  variable for cure which increases at a constant rate, cure progress upgrades will decrease the rate it develops or just remove % of completion. 
+
+def starter_region:
+  pick a region of the world to start with, get a region specific upgrade for free, randomize between lvl 1 and lvl 3
+  Plus 1 upgrade point that the user can choose for any other upgrade that is lvl 0
+  
+def click:
+  infections += multiplier
+  points += point multiplier
+  
+def passive:
+  infections += passive infection gain not from clicking
+  cure progress += cure rate
+  mutation dice roll
+  cure progress dice roll
+  (dice roll will be a random, say 1 in 15 chance that it occurs, if True then mutation (another random upgrade or bonus points given))
+  (for cure, the dice roll will randomly increase the rate in for cure progress or increase % completion simulating a "breakthrough")
+  
+def lethal upgrades
+  chance of death += multiplier
+  cure rate += multiplier
+  
+
+  
