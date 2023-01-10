@@ -18,9 +18,15 @@ def passive:
   (dice roll will be a random, say 1 in 15 chance that it occurs, if True then mutation (another random upgrade or bonus points given))
   (for cure, the dice roll will randomly increase the rate in for cure progress or increase % completion simulating a "breakthrough")
   
-def lethal upgrades
+def lethal upgrades:
   chance of death += multiplier
   cure rate += multiplier
+  
+def infectious upgrades:
+  passive infection gain += multiplier
+  
+def misc upgrades:
+  
   
 
   
