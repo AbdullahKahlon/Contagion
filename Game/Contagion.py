@@ -45,10 +45,11 @@ window.configure(bg='black')
 #widgets
 #global infc
 infc=Label(window, text=("Infections: " + str(infections)), fg='white', bg='black', font=("Fixedsys Excelsior 3.01", 30))
-infc.place(x=400, y=10)
+infc.place(x=10, y=10)
 
-btn=Button(window, text="Spread", height= 2, width=10, fg='black', bg='red', font=("Fixedsys Excelsior 3.01", 12), command=lambda : add())
-btn.place(x=490, y=70)
+infectbtn= PhotoImage(file='infect.png')
+btn= Button(window, highlightthickness = 0, bd = 0, width=64, height=62, image=infectbtn, command= add)
+btn.place(x=955, y=510)
   
 # Execute tkinter
 passive()
