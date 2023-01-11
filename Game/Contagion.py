@@ -1,16 +1,36 @@
 # Import module 
 from tkinter import *
-from tkinter import ttk
+from time import sleep
+import threading
 
 global infections
-infections = 1
+global multiplier
+global infectivity
+infections = 0
+infectivity = 1
+multiplier = 1
 
 
 def add():
     global infections
+    global multiplier
     print("a")
-    infections += 1
+    infections += 1*multiplier
     infc.configure(text=("Infections: " + str(infections)))
+
+def passive():
+    global infections
+    global infectivity
+    print("p")
+    infections += infectivity
+    infc.configure(text=("Infections: " + str(infections)))
+    sleep(1)
+    t = threading.Timer(1.0, passive)
+    t.start()
+
+
+t = threading.Timer(1.0, passive)
+t.start() 
 
 
 # Create object 
@@ -22,20 +42,15 @@ window.title('Contagion')
 window.configure(bg='black')
 
 
-      
-# change background
-# bg = PhotoImage(file = "background.png")
-# label1 = Label( window, image = bg)
-# label1.place(x = 0, y = 0)
-
-
-global infc
+#widgets
+#global infc
 infc=Label(window, text=("Infections: " + str(infections)), fg='white', bg='black', font=("Fixedsys Excelsior 3.01", 30))
-infc.place(x=10, y=10)
+infc.place(x=400, y=10)
 
-btn=Button(window, text="Spread", fg='black', bg='red', command=lambda : add())
-btn.place(x=120, y=70)
+btn=Button(window, text="Spread", height= 2, width=10, fg='black', bg='red', font=("Fixedsys Excelsior 3.01", 12), command=lambda : add())
+btn.place(x=490, y=70)
   
 # Execute tkinter
+passive()
 window.mainloop()
 
