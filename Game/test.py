@@ -1,3 +1,11 @@
+import datetime
+  
+# For using listdir()
 import os
-print(os.getcwd())
-print(os.listdir())
+
+amount = 12
+
+
+for i in range(amount+1):
+    date = datetime.date.today() + datetime.timedelta(days=i)
+    print(date)
