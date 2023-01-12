@@ -28,6 +28,7 @@ def tick():
     global infections
     global infectivity
     global currentdate
+    global infc
 
     print("t")
     
@@ -61,6 +62,7 @@ window.resizable(width=False, height=False)
 
 
 #widgets
+global infc
 infc=Label(window, text=("Infections: " + str(infections)), fg='white', bg='black', font=("Fixedsys Excelsior 3.01", 30))
 infc.place(x=10, y=10)
 
@@ -90,9 +92,35 @@ irate.place(x=12, y=55)
 drate=Label(window, text=("Deaths per day: 0"), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 drate.place(x=13, y=80)
 
+
+#buttons
 infectbtn= PhotoImage(file='infect.png')
 btn= Button(window, highlightthickness = 0, bd = 0, width=64, height=62, image=infectbtn, command= add)
 btn.place(x=955, y=510)
+
+infec1= Button(window, text="Air Transmission 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+infec2= Button(window, text="Land Transmission 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+infec3= Button(window, text="Water Transmission 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+
+infec1.place(x=25, y=185)
+infec2.place(x=25, y=290)
+infec3.place(x=25, y=395)
+
+lethal1= Button(window, text="Symptom: Headache", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+lethal2= Button(window, text="Symptom: Cough", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+lethal3= Button(window, text="Symptom: Nausea", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+
+lethal1.place(x=250, y=185)
+lethal2.place(x=250, y=290)
+lethal3.place(x=250, y=395)
+
+misc1= Button(window, text="Misc 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+misc2= Button(window, text="Misc 2", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+misc3= Button(window, text="Misc 3", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+
+misc1.place(x=475, y=185)
+misc2.place(x=475, y=290)
+misc3.place(x=475, y=395)
 
 
 # Execute tkinter
