@@ -92,6 +92,18 @@ irate.place(x=12, y=55)
 drate=Label(window, text=("Deaths per day: 0"), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 drate.place(x=13, y=80)
 
+cure_prog = Label(window, text =("Cure Progress: 0%"), fg="blue", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+cure_prog.place(x=475, y=518)
+
+lethality_label = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+lethality_label.place(x=250, y=518)
+
+infectivity_label = Label(window, text =("Infectivity: 0%"), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+infectivity_label.place(x=25, y=518)
+
+points_label = Label(window, text =("Points: 0%"), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+points_label.place(x=25, y=518)
+
 
 #buttons
 infectbtn= PhotoImage(file='infect.png')
