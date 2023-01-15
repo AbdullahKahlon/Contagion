@@ -9,9 +9,13 @@ global multiplier
 global infectivity
 global count
 global currentdate
+global points
 infections = -1
 infectivity = 1
 multiplier = 1
+points = 0
+pnts_counter = 0
+infc_per_pnt = 200
 count = 0
 currentdate = ''
 
@@ -19,9 +23,19 @@ currentdate = ''
 def add():
     global infections
     global multiplier
+    global points
+    global pnts_counter
+    global infc_per_pnt
     print("a")
     infections += 1*multiplier
+    pnts_counter += 1*multiplier
+    if pnts_counter == infc_per_pnt:
+        print("x")
+        points += 1
+        pnts_counter = 0  
+    pnts.configure(text=("Points: " + str(points)))
     infc.configure(text=("Infections: " + str(infections)))
+    
 
 def tick():
     global count
@@ -63,6 +77,7 @@ window.resizable(width=False, height=False)
 
 #widgets
 global infc
+global pnts
 infc=Label(window, text=("Infections: " + str(infections)), fg='white', bg='black', font=("Fixedsys Excelsior 3.01", 30))
 infc.place(x=10, y=10)
 
@@ -101,9 +116,11 @@ lethality_label.place(x=250, y=518)
 infectivity_label = Label(window, text =("Infectivity: 0%"), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
 infectivity_label.place(x=25, y=518)
 
-points_label = Label(window, text =("Points: 0%"), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-points_label.place(x=25, y=518)
+pnts = Label(window, text =("Points: " + str(points)), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+pnts.place(x=750, y=518)
 
+clicker_label = Label(window, text =("Infect"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 14))
+clicker_label.place(x=956, y=468)
 
 #buttons
 infectbtn= PhotoImage(file='infect.png')
