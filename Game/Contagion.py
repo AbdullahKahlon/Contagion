@@ -3,6 +3,7 @@ from tkinter import *
 from time import sleep
 import threading
 import datetime
+import math
 
 global infections
 global multiplier
@@ -14,7 +15,6 @@ infections = -1
 infectivity = 1
 multiplier = 1
 points = 0
-pnts_counter = 0
 infc_per_pnt = 200
 count = 0
 currentdate = ''
@@ -24,16 +24,11 @@ def add():
     global infections
     global multiplier
     global points
-    global pnts_counter
     global infc_per_pnt
     print("a")
     infections += 1*multiplier
-    pnts_counter += 1*multiplier
-    if pnts_counter == infc_per_pnt:
-        print("x")
-        points += 1
-        pnts_counter = 0  
-    pnts.configure(text=("Points: " + str(points)))
+    points += (1/infc_per_pnt)*multiplier  
+    pnts.configure(text=("Points: " + str(math.floor(points))))
     infc.configure(text=("Infections: " + str(infections)))
     
 
@@ -43,11 +38,15 @@ def tick():
     global infectivity
     global currentdate
     global infc
+    global points
+    global infc_per_pnt
 
     print("t")
     
     infections += infectivity
     infc.configure(text=("Infections: " + str(infections)))
+    points += (1/infc_per_pnt)*multiplier  
+    pnts.configure(text=("Points: " + str(math.floor(points))))
     unfecpop.configure(text=("Population Uninfected: " + str(8010529930 - infections )))
     
     count+=1
