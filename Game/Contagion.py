@@ -1,4 +1,4 @@
-# Import module 
+#Import Modules
 from tkinter import *
 from time import sleep
 import threading
@@ -11,10 +11,18 @@ global infectivity
 global count
 global currentdate
 global points
+global upgrade_cost
+global infectivity_upgrades
+global symptom_upgrades
+global misc_upgrades
+misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
+symptom_upgrades = {"nausea": 0, "cough": 0, "fever": 0}
+infectivity_upgrades = {"air": 0, "land": 0, "water": 0}
+upgrade_cost = 1
 infections = -1
 infectivity = 1
 multiplier = 1
-points = 0
+points = 1
 infc_per_pnt = 200
 count = 0
 currentdate = ''
@@ -22,16 +30,15 @@ currentdate = ''
 
 def add():
     global infections
-    global multiplier
+    global infectivity
     global points
     global infc_per_pnt
     print("a")
-    infections += 1*multiplier
-    points += (1/infc_per_pnt)*multiplier  
+    infections += 1*infectivity
+    points += (1/infc_per_pnt)*infectivity 
     pnts.configure(text=("Points: " + str(math.floor(points))))
     infc.configure(text=("Infections: " + str(infections)))
     
-
 def tick():
     global count
     global infections
@@ -45,7 +52,7 @@ def tick():
     
     infections += infectivity
     infc.configure(text=("Infections: " + str(infections)))
-    points += (1/infc_per_pnt)*multiplier  
+    points += (1/infc_per_pnt)*infectivity  
     pnts.configure(text=("Points: " + str(math.floor(points))))
     unfecpop.configure(text=("Population Uninfected: " + str(8010529930 - infections )))
     
@@ -134,7 +141,7 @@ infec1.place(x=25, y=185)
 infec2.place(x=25, y=290)
 infec3.place(x=25, y=395)
 
-lethal1= Button(window, text="Symptom: Headache", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+lethal1= Button(window, text="Symptom: Fever", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 lethal2= Button(window, text="Symptom: Cough", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 lethal3= Button(window, text="Symptom: Nausea", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 
@@ -142,8 +149,8 @@ lethal1.place(x=250, y=185)
 lethal2.place(x=250, y=290)
 lethal3.place(x=250, y=395)
 
-misc1= Button(window, text="Misc 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-misc2= Button(window, text="Misc 2", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+misc1= Button(window, text="Cure Resistance", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+misc2= Button(window, text="Mutation Chance", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 misc3= Button(window, text="Misc 3", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 
 misc1.place(x=475, y=185)
