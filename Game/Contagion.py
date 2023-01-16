@@ -154,9 +154,9 @@ infectbtn= PhotoImage(file='infect.png')
 btn= Button(window, highlightthickness = 0, bd = 0, width=64, height=62, image=infectbtn, command= add)
 btn.place(x=955, y=510)
 
-infec1= Button(window, text="Air Transmission " + str(infectivity_upgrades["air"+1]), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=air_upgrade)
-infec2= Button(window, text="Land Transmission " + str(infectivity_upgrades["land"+1]), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-infec3= Button(window, text="Water Transmission " + str(infectivity_upgrades["water"+1]), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+infec1= Button(window, text="Air Transmission " + str(infectivity_upgrades["air"]+1), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=air_upgrade)
+infec2= Button(window, text="Land Transmission " + str(infectivity_upgrades["land"]+1), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+infec3= Button(window, text="Water Transmission " + str(infectivity_upgrades["water"]+1), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 
 infec1.place(x=25, y=185)
 infec2.place(x=25, y=290)
