@@ -11,14 +11,22 @@ global infectivity
 global count
 global currentdate
 global points
-global upgrade_cost
+global upgrade_cost_a
+global upgrade_cost_b
+global upgrade_cost_c
 global infectivity_upgrades
 global symptom_upgrades
 global misc_upgrades
+global death
+global mutation
+mutation = 0.01
+death = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
 symptom_upgrades = {"nausea": 0, "cough": 0, "fever": 0}
 infectivity_upgrades = {"air": 0, "land": 0, "water": 0}
-upgrade_cost = 1
+upgrade_cost_a = 1
+upgrade_cost_b = 5
+upgrade_cost_c = 25
 infections = -1
 infectivity = 1
 multiplier = 1
@@ -39,6 +47,19 @@ def add():
     pnts.configure(text=("Points: " + str(math.floor(points))))
     infc.configure(text=("Infections: " + str(infections)))
     
+def air_upgrade():
+    global points
+    global infectivity
+    global death
+    global infectivity_upgrades
+    global upgrade_cost_a
+    if points >= upgrade_cost_a:
+        infectivity_upgrades["air"] += 1
+        points -= upgrade_cost_a
+        infectivity *= 3
+        upgrade_cost_a **= 3
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+ 
 def tick():
     global count
     global infections
@@ -133,9 +154,9 @@ infectbtn= PhotoImage(file='infect.png')
 btn= Button(window, highlightthickness = 0, bd = 0, width=64, height=62, image=infectbtn, command= add)
 btn.place(x=955, y=510)
 
-infec1= Button(window, text="Air Transmission 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-infec2= Button(window, text="Land Transmission 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-infec3= Button(window, text="Water Transmission 1", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+infec1= Button(window, text="Air Transmission " + str(infectivity_upgrades["air"+1]), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=air_upgrade)
+infec2= Button(window, text="Land Transmission " + str(infectivity_upgrades["land"+1]), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+infec3= Button(window, text="Water Transmission " + str(infectivity_upgrades["water"+1]), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 
 infec1.place(x=25, y=185)
 infec2.place(x=25, y=290)
