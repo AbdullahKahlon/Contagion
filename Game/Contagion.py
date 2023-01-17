@@ -19,6 +19,7 @@ global symptom_upgrades
 global misc_upgrades
 global death
 global mutation
+global population
 mutation = 0.01
 death = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
@@ -34,6 +35,7 @@ points = 4
 infc_per_pnt = 25
 count = 0
 currentdate = ''
+population = 8011626402
 
 
 def add():
@@ -45,7 +47,7 @@ def add():
     infections += 1*infectivity
     points += (1/infc_per_pnt)*infectivity 
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    infc.configure(text=("Infections: " + str(infections)))
+    infc.configure(text=("Infections: " + str(math.floor(infections))))
     
 def air_upgrade():
     global points
@@ -85,14 +87,18 @@ def tick():
     global infc
     global points
     global infc_per_pnt
+    global population
+
+    infections -= infections*death
+    population -= infections*death
 
     print("t")
     
     infections += infectivity
-    infc.configure(text=("Infections: " + str(infections)))
+    infc.configure(text=("Infections: " + str(math.floor(infections))))
     points += (1/infc_per_pnt)*infectivity  
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    unfecpop.configure(text=("Population Uninfected: " + str(8010529930 - infections )))
+    unfecpop.configure(text=("Population Uninfected: " + str(math.floor(population - infections))))
     
     count+=1
     currentdate = datetime.date.today() + datetime.timedelta(days=count)
@@ -126,7 +132,7 @@ window.resizable(width=False, height=False)
 #widgets
 global infc
 global pnts
-infc=Label(window, text=("Infections: " + str(infections)), fg='white', bg='black', font=("Fixedsys Excelsior 3.01", 30))
+infc=Label(window, text=("Infections: " + str(math.floor(infections))), fg='white', bg='black', font=("Fixedsys Excelsior 3.01", 30))
 infc.place(x=10, y=10)
 
 cornerlogo = PhotoImage(file='cornerlogo.png')
@@ -140,10 +146,10 @@ bline.place(x=0, y=135)
 tline = Label(window, image = bottomline, highlightthickness = 0, bd = 0)
 tline.place(x=0, y=495)
 
-alivepop=Label(window, text=("Population Alive: 8010529930"), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+alivepop=Label(window, text=("Population Alive: " + str(population)), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 alivepop.place(x=750, y=55)
 
-unfecpop=Label(window, text=("Population Uninfected: " + str(8010529930 - infections )), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+unfecpop=Label(window, text=("Population Uninfected: " + str(population - infections )), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 unfecpop.place(x=750, y=80)
 
 datelbl=Label(window, text=("Date: " + str(currentdate)), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
@@ -152,8 +158,6 @@ datelbl.place(x=750, y=105)
 irate=Label(window, text=("Infections per day: " + str(infectivity)), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 irate.place(x=12, y=55)
 
-drate=Label(window, text=("Deaths per day: 0"), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-drate.place(x=13, y=80)
 
 cure_prog = Label(window, text =("Cure Progress: 0%"), fg="blue", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
 cure_prog.place(x=475, y=518)
