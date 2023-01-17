@@ -19,6 +19,7 @@ global symptom_upgrades
 global misc_upgrades
 global death
 global mutation
+global population
 mutation = 0.01
 death = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
@@ -34,6 +35,7 @@ points = 4
 infc_per_pnt = 200
 count = 0
 currentdate = ''
+population = 8011626402
 
 
 def add():
@@ -82,6 +84,7 @@ def tick():
     datelbl.configure(text=("Date: " + str(currentdate)))
     
     irate.configure(text=("Infections per day: " + str(infectivity)))
+    unfecpop.configure(text=("Population Uninfected: " + str(population - infections )))
 
     infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
 
@@ -123,10 +126,10 @@ bline.place(x=0, y=135)
 tline = Label(window, image = bottomline, highlightthickness = 0, bd = 0)
 tline.place(x=0, y=495)
 
-alivepop=Label(window, text=("Population Alive: 8010529930"), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+alivepop=Label(window, text=("Population Alive: " + str(population)), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 alivepop.place(x=750, y=55)
 
-unfecpop=Label(window, text=("Population Uninfected: " + str(8010529930 - infections )), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+unfecpop=Label(window, text=("Population Uninfected: " + str(population - infections )), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 unfecpop.place(x=750, y=80)
 
 datelbl=Label(window, text=("Date: " + str(currentdate)), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
