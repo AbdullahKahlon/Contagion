@@ -80,6 +80,8 @@ def tick():
     count+=1
     currentdate = datetime.date.today() + datetime.timedelta(days=count)
     datelbl.configure(text=("Date: " + str(currentdate)))
+    
+    irate.configure(text=("Infections per day: " + str(infectivity)))
 
     sleep(1)
     t = threading.Timer(1.0, tick)
