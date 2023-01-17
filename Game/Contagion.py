@@ -31,7 +31,7 @@ infections = -1
 infectivity = 1
 multiplier = 1
 points = 4
-infc_per_pnt = 200
+infc_per_pnt = 25
 count = 0
 currentdate = ''
 
@@ -53,11 +53,28 @@ def air_upgrade():
     global death
     global infectivity_upgrades
     global upgrade_cost_a
+    global infc_per_pnt
     if points >= upgrade_cost_a:
         infectivity_upgrades["air"] += 1
         points -= upgrade_cost_a
-        infectivity *= 3
+        infectivity *= 4.5
         upgrade_cost_a *=256
+        infc_per_pnt += 25
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+
+def land_upgrade():
+    global points
+    global infectivity
+    global death
+    global infectivity_upgrades
+    global upgrade_cost_b
+    global infc_per_pnt
+    if points >= upgrade_cost_b:
+        infectivity_upgrades["land"] += 1
+        points -= upgrade_cost_b
+        infectivity *= 4.5
+        upgrade_cost_b *=256
+        infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
  
 def tick():
@@ -159,7 +176,7 @@ btn= Button(window, highlightthickness = 0, bd = 0, width=64, height=62, image=i
 btn.place(x=955, y=510)
 
 infec1= Button(window, text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=air_upgrade)
-infec2= Button(window, text="Land Transmission " + str(infectivity_upgrades["land"]+1), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+infec2= Button(window, text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=land_upgrade)
 infec3= Button(window, text="Water Transmission " + str(infectivity_upgrades["water"]+1), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 
 infec1.place(x=25, y=185)
