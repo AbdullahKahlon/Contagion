@@ -24,13 +24,13 @@ death = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
 symptom_upgrades = {"nausea": 0, "cough": 0, "fever": 0}
 infectivity_upgrades = {"air": 0, "land": 0, "water": 0}
-upgrade_cost_a = 1
-upgrade_cost_b = 5
-upgrade_cost_c = 25
+upgrade_cost_a = 4
+upgrade_cost_b = 16
+upgrade_cost_c = 64
 infections = -1
 infectivity = 1
 multiplier = 1
-points = 1
+points = 4
 infc_per_pnt = 200
 count = 0
 currentdate = ''
@@ -57,7 +57,7 @@ def air_upgrade():
         infectivity_upgrades["air"] += 1
         points -= upgrade_cost_a
         infectivity *= 3
-        upgrade_cost_a **= 3
+        upgrade_cost_a *=256
     pnts.configure(text=("Points: " + str(math.floor(points))))
  
 def tick():
