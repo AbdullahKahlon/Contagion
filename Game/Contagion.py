@@ -117,8 +117,8 @@ def tick():
     global dayspassed
     dayspassed += 1
     
-    if dayspassed > 20:
-        cure += round(random.uniform(0, 0.123456789), 3)
+    if dayspassed > 0:
+        cure += round(random.uniform(-0.33, 0.66), 3)
     cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
 
     infections -= infections*lethality
