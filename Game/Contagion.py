@@ -4,6 +4,7 @@ from time import sleep
 import threading
 import datetime
 import math
+import random
 
 global infections
 global multiplier
@@ -17,11 +18,13 @@ global upgrade_cost_c
 global infectivity_upgrades
 global symptom_upgrades
 global misc_upgrades
-global death
+global lethality
 global mutation
 global population
+global cure
+global dayspassed
 mutation = 0.01
-death = 0.001
+lethality = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
 symptom_upgrades = {"nausea": 0, "cough": 0, "fever": 0}
 infectivity_upgrades = {"air": 0, "land": 0, "water": 0}
@@ -36,7 +39,8 @@ infc_per_pnt = 25
 count = 0
 currentdate = ''
 population = 8011626402
-
+cure = 0
+dayspassed = 0
 
 def add():
     global infections
@@ -52,7 +56,7 @@ def add():
 def air_upgrade():
     global points
     global infectivity
-    global death
+    global lethality
     global infectivity_upgrades
     global upgrade_cost_a
     global infc_per_pnt
@@ -63,11 +67,12 @@ def air_upgrade():
         upgrade_cost_a *=64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
+    infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
 
 def land_upgrade():
     global points
     global infectivity
-    global death
+    global lethality
     global infectivity_upgrades
     global upgrade_cost_b
     global infc_per_pnt
@@ -78,11 +83,12 @@ def land_upgrade():
         upgrade_cost_b *=64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
+    infec2.configure(text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b))
 
 def water_upgrade():
     global points
     global infectivity
-    global death
+    global lethality
     global infectivity_upgrades
     global upgrade_cost_c
     global infc_per_pnt
@@ -93,6 +99,7 @@ def water_upgrade():
         upgrade_cost_c *= 64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
+    infec3.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
  
 def tick():
     global count
@@ -106,9 +113,16 @@ def tick():
     global infectivity_upgrades
     global upgrade_cost_a
     global upgrade_cost_b, upgrade_cost_c
+    global cure
+    global dayspassed
+    dayspassed += 1
+    
+    if dayspassed > 20:
+        cure += round(random.uniform(0, 0.123456789), 3)
+    cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
 
-    infections -= infections*death
-    population -= infections*death
+    infections -= infections*lethality
+    population -= infections*lethality
 
     print("t")
     
@@ -116,7 +130,12 @@ def tick():
     infc.configure(text=("Infections: " + str(math.floor(infections))))
     points += (1/infc_per_pnt)*infectivity  
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    unfecpop.configure(text=("Population Uninfected: " + str(math.floor(population - infections))))
+    
+    uninfecpop = math.floor(population - infections)
+    if uninfecpop <= 0:
+        infectivity = 0
+    else:
+        unfecpop.configure(text=("Population Uninfected: " + str(math.floor(population - infections))))
     
     count+=1
     currentdate = datetime.date.today() + datetime.timedelta(days=count)
@@ -124,9 +143,9 @@ def tick():
     
     irate.configure(text=("Infections per day: " + str(infectivity)))
 
-    infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
-    infec2.configure(text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b))
-    infec3.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
+    
+    
+    
 
 
     sleep(1)
@@ -176,21 +195,19 @@ unfecpop.place(x=750, y=80)
 datelbl=Label(window, text=("Date: " + str(currentdate)), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 datelbl.place(x=750, y=105)
 
-irate=Label(window, text=("Infections per day: " + str(infectivity)), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+irate=Label(window, text=("Infections per day: " + str(math.floor(infectivity))), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 irate.place(x=12, y=55)
 
+drate=Label(window, text=("Deaths per day: " + str(lethality)), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+drate.place(x=12, y=75)
 
 cure_prog = Label(window, text =("Cure Progress: 0%"), fg="blue", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-cure_prog.place(x=475, y=518)
+cure_prog.place(x=25, y=518)
 
-lethality_label = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-lethality_label.place(x=250, y=518)
 
-infectivity_label = Label(window, text =("Infectivity: 0%"), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-infectivity_label.place(x=25, y=518)
 
-pnts = Label(window, text =("Points: " + str(points)), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-pnts.place(x=750, y=518)
+pnts = Label(window, text =("Points: " + str(points)), fg="brown", bg = 'black', font=("Fixedsys Excelsior 3.01", 14))
+pnts.place(x=13, y=95)
 
 clicker_label = Label(window, text =("Infect"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 14))
 clicker_label.place(x=956, y=468)
