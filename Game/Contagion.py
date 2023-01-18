@@ -60,7 +60,7 @@ def air_upgrade():
         infectivity_upgrades["air"] += 1
         points -= upgrade_cost_a
         infectivity *= 4.5
-        upgrade_cost_a *=256
+        upgrade_cost_a *=64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
 
@@ -75,7 +75,7 @@ def land_upgrade():
         infectivity_upgrades["land"] += 1
         points -= upgrade_cost_b
         infectivity *= 4.5
-        upgrade_cost_b *=256
+        upgrade_cost_b *=64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
 
@@ -90,7 +90,7 @@ def water_upgrade():
         infectivity_upgrades["water"] += 1
         points -= upgrade_cost_c
         infectivity *= 4.5
-        upgrade_cost_c *= 256
+        upgrade_cost_c *= 64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
  
@@ -103,6 +103,9 @@ def tick():
     global points
     global infc_per_pnt
     global population
+    global infectivity_upgrades
+    global upgrade_cost_a
+    global upgrade_cost_b, upgrade_cost_c
 
     infections -= infections*death
     population -= infections*death
