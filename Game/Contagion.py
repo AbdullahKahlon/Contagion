@@ -60,7 +60,7 @@ def air_upgrade():
         infectivity_upgrades["air"] += 1
         points -= upgrade_cost_a
         infectivity *= 4.5
-        upgrade_cost_a *=64
+        upgrade_cost_a *=256
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
 
@@ -75,7 +75,7 @@ def land_upgrade():
         infectivity_upgrades["land"] += 1
         points -= upgrade_cost_b
         infectivity *= 4.5
-        upgrade_cost_b *= 64
+        upgrade_cost_b *=256
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
 
@@ -90,7 +90,7 @@ def water_upgrade():
         infectivity_upgrades["water"] += 1
         points -= upgrade_cost_c
         infectivity *= 4.5
-        upgrade_cost_c *= 64
+        upgrade_cost_c *= 256
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
  
@@ -122,6 +122,9 @@ def tick():
     irate.configure(text=("Infections per day: " + str(infectivity)))
 
     infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
+    infec2.configure(text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b))
+    infec2.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
+
 
     sleep(1)
     t = threading.Timer(1.0, tick)
