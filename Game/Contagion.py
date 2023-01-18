@@ -122,6 +122,9 @@ def tick():
     irate.configure(text=("Infections per day: " + str(infectivity)))
 
     infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
+    infec2.configure(text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b))
+    infec2.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
+
 
     sleep(1)
     t = threading.Timer(1.0, tick)
