@@ -26,6 +26,7 @@ global mutation
 global population
 global cure
 global dayspassed
+global deadpop
 mutation = 0.01
 lethality = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
@@ -47,6 +48,7 @@ currentdate = ''
 population = 8011626402
 cure = 0
 dayspassed = 0
+deadpop = 0
 
 def add():
     global infections
@@ -192,14 +194,18 @@ def tick():
     global upgrade_cost_b, upgrade_cost_c
     global cure
     global dayspassed
+    global deadpop 
     dayspassed += 1
     
     if dayspassed > 0:
         cure += round(random.uniform(-0.33, 0.66), 3)
     cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
 
+    deadpop += infections*lethality
     infections -= infections*lethality
     population -= infections*lethality
+
+    lethalitylbl.config(text="Lethality: " + str(lethality) + "%")
 
     print("t")
     
@@ -276,8 +282,9 @@ datelbl.place(x=750, y=105)
 irate=Label(window, text=("Infections per day: " + str(math.floor(infectivity))), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 irate.place(x=12, y=55)
 
-drate=Label(window, text=("Deaths per day: " + str(lethality)), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-drate.place(x=12, y=75)
+
+lethalitylbl = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+lethalitylbl.place(x=375, y=518)
 
 cure_prog = Label(window, text =("Cure Progress: 0%"), fg="blue", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
 cure_prog.place(x=25, y=518)
