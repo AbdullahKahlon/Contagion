@@ -18,6 +18,7 @@ global upgrade_cost_c
 global upgrade_cost_d
 global upgrade_cost_e
 global upgrade_cost_f
+global upgrade_cost_g
 global infectivity_upgrades
 global symptom_upgrades
 global misc_upgrades
@@ -26,8 +27,7 @@ global mutation
 global population
 global cure
 global dayspassed
-global deadpop
-mutation = 0.01
+mutation = 0.001
 lethality = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
 symptom_upgrades = {"nausea": 0, "cough": 0, "fever": 0}
@@ -38,6 +38,7 @@ upgrade_cost_c = 64
 upgrade_cost_d = 3
 upgrade_cost_e = 9
 upgrade_cost_f = 27
+upgrade_cost_g = 1000
 infections = -1
 infectivity = 1
 multiplier = 1
@@ -48,7 +49,6 @@ currentdate = ''
 population = 8011626402
 cure = 0
 dayspassed = 0
-deadpop = 0
 
 def add():
     global infections
@@ -131,7 +131,6 @@ def fever_upgrade():
     global lethality
     global symptom_upgrades
     global upgrade_cost_d
-    global infc_per_pnt
     if points >= upgrade_cost_d:
         symptom_upgrades["fever"] += 1
         points -= upgrade_cost_d
@@ -149,7 +148,6 @@ def nausea_upgrade():
     global lethality
     global symptom_upgrades
     global upgrade_cost_f
-    global infc_per_pnt
     if points >= upgrade_cost_f:
         symptom_upgrades["nausea"] += 1
         points -= upgrade_cost_f
@@ -167,7 +165,6 @@ def cough_upgrade():
     global lethality
     global symptom_upgrades
     global upgrade_cost_e
-    global infc_per_pnt
     if points >= upgrade_cost_e:
         symptom_upgrades["cough"] += 1
         points -= upgrade_cost_e
@@ -177,8 +174,23 @@ def cough_upgrade():
     print(symptom_upgrades["cough"])
     if symptom_upgrades["cough"] == 4:
         lethal2.configure(text="Cough \nMaxed", command = '')
-    else:
-        lethal2.configure(text="Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_e))
+    
+        
+def cure_upgrade():
+    global points
+    global cure
+    global upgrade_cost_g
+    global misc_upgrades
+
+    if points >= upgrade_cost_g:
+        misc_upgrades["cure"] += 1
+        points -= upgrade_cost_g
+        cure -= 0.10
+        upgrade_cost_g *=10
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+    
+
+
  
 def tick():
     global count
@@ -194,18 +206,14 @@ def tick():
     global upgrade_cost_b, upgrade_cost_c
     global cure
     global dayspassed
-    global deadpop 
     dayspassed += 1
     
     if dayspassed > 0:
         cure += round(random.uniform(-0.33, 0.66), 3)
     cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
 
-    deadpop += infections*lethality
     infections -= infections*lethality
     population -= infections*lethality
-
-    lethalitylbl.config(text="Lethality: " + str(lethality) + "%")
 
     print("t")
     
@@ -282,9 +290,8 @@ datelbl.place(x=750, y=105)
 irate=Label(window, text=("Infections per day: " + str(math.floor(infectivity))), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 irate.place(x=12, y=55)
 
-
-lethalitylbl = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-lethalitylbl.place(x=375, y=518)
+drate=Label(window, text=("Deaths per day: " + str(lethality)), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+drate.place(x=12, y=75)
 
 cure_prog = Label(window, text =("Cure Progress: 0%"), fg="blue", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
 cure_prog.place(x=25, y=518)
