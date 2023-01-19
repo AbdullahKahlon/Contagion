@@ -15,6 +15,9 @@ global points
 global upgrade_cost_a
 global upgrade_cost_b
 global upgrade_cost_c
+global upgrade_cost_d
+global upgrade_cost_e
+global upgrade_cost_f
 global infectivity_upgrades
 global symptom_upgrades
 global misc_upgrades
@@ -31,6 +34,9 @@ infectivity_upgrades = {"air": 0, "land": 0, "water": 0}
 upgrade_cost_a = 4
 upgrade_cost_b = 16
 upgrade_cost_c = 64
+upgrade_cost_d = 3
+upgrade_cost_e = 9
+upgrade_cost_f = 27
 infections = -1
 infectivity = 1
 multiplier = 1
@@ -117,6 +123,60 @@ def water_upgrade():
         infec3.configure(text="Water Transmission \nMaxed", command = '')
     else:
         infec3.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
+
+def fever_upgrade():
+    global points
+    global lethality
+    global symptom_upgrades
+    global upgrade_cost_d
+    global infc_per_pnt
+    if points >= upgrade_cost_d:
+        symptom_upgrades["fever"] += 1
+        points -= upgrade_cost_d
+        lethality *= 4.1
+        upgrade_cost_d *= 27
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+    print(symptom_upgrades["fever"])
+    if symptom_upgrades["fever"] == 4:
+        lethal1.configure(text="Fever \nMaxed", command = '')
+    else:
+        lethal1.configure(text="Fever " + str(symptom_upgrades["fever"]+1) + "\nCost: " + str(upgrade_cost_d))
+
+def nausea_upgrade():
+    global points
+    global lethality
+    global symptom_upgrades
+    global upgrade_cost_f
+    global infc_per_pnt
+    if points >= upgrade_cost_f:
+        symptom_upgrades["nausea"] += 1
+        points -= upgrade_cost_f
+        lethality *= 4.1
+        upgrade_cost_f *= 27
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+    print(symptom_upgrades["nausea"])
+    if symptom_upgrades["nausea"] == 4:
+        lethal3.configure(text="Nausea \nMaxed", command = '')
+    else:
+        lethal3.configure(text="Nausea " + str(symptom_upgrades["nausea"]+1) + "\nCost: " + str(upgrade_cost_f))
+
+def cough_upgrade():
+    global points
+    global lethality
+    global symptom_upgrades
+    global upgrade_cost_e
+    global infc_per_pnt
+    if points >= upgrade_cost_e:
+        symptom_upgrades["cough"] += 1
+        points -= upgrade_cost_e
+        lethality *= 4.1
+        upgrade_cost_e *= 27
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+    print(symptom_upgrades["cough"])
+    if symptom_upgrades["cough"] == 4:
+        lethal2.configure(text="Cough \nMaxed", command = '')
+    else:
+        lethal2.configure(text="Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_e))
  
 def tick():
     global count
@@ -243,9 +303,9 @@ infec1.place(x=25, y=185)
 infec2.place(x=25, y=290)
 infec3.place(x=25, y=395)
 
-lethal1= Button(window, text="Symptom: Fever", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-lethal2= Button(window, text="Symptom: Cough", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-lethal3= Button(window, text="Symptom: Nausea", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+lethal1= Button(window, text="Symptom: Fever " + str(symptom_upgrades["fever"]+1) + "\nCost: " + str(upgrade_cost_d), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=fever_upgrade)
+lethal2= Button(window, text="Symptom: Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_e), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=cough_upgrade)
+lethal3= Button(window, text="Symptom: Nausea " + str(symptom_upgrades["nausea"]+1) + "\nCost: " + str(upgrade_cost_f), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=nausea_upgrade)
 
 lethal1.place(x=250, y=185)
 lethal2.place(x=250, y=290)
