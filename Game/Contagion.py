@@ -151,6 +151,7 @@ def tick():
     uninfecpop = math.floor(population - infections)
     if uninfecpop <= 0:
         infectivity = 0
+        infections = population
     else:
         unfecpop.configure(text=("Population Uninfected: " + str(math.floor(population - infections))))
     
