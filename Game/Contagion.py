@@ -133,7 +133,7 @@ def fever_upgrade():
     if points >= upgrade_cost_d:
         symptom_upgrades["fever"] += 1
         points -= upgrade_cost_d
-        lethality *= 4.1
+        lethality *= 2.5
         upgrade_cost_d *= 27
     pnts.configure(text=("Points: " + str(math.floor(points))))
     print(symptom_upgrades["fever"])
@@ -151,7 +151,7 @@ def nausea_upgrade():
     if points >= upgrade_cost_f:
         symptom_upgrades["nausea"] += 1
         points -= upgrade_cost_f
-        lethality *= 4.1
+        lethality *= 2.5
         upgrade_cost_f *= 27
     pnts.configure(text=("Points: " + str(math.floor(points))))
     print(symptom_upgrades["nausea"])
@@ -169,7 +169,7 @@ def cough_upgrade():
     if points >= upgrade_cost_e:
         symptom_upgrades["cough"] += 1
         points -= upgrade_cost_e
-        lethality *= 4.1
+        lethality *= 2.5
         upgrade_cost_e *= 27
     pnts.configure(text=("Points: " + str(math.floor(points))))
     print(symptom_upgrades["cough"])
