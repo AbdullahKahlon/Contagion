@@ -47,9 +47,10 @@ def add():
     global infectivity
     global points
     global infc_per_pnt
+    global cure
     print("a")
     infections += 1*infectivity
-    points += (1/infc_per_pnt)*infectivity 
+    points += (1/infc_per_pnt)*infectivity+(0.1*cure)
     pnts.configure(text=("Points: " + str(math.floor(points))))
     infc.configure(text=("Infections: " + str(math.floor(infections))))
     
@@ -60,14 +61,22 @@ def air_upgrade():
     global infectivity_upgrades
     global upgrade_cost_a
     global infc_per_pnt
+
     if points >= upgrade_cost_a:
         infectivity_upgrades["air"] += 1
         points -= upgrade_cost_a
         infectivity *= 4.5
         upgrade_cost_a *=64
         infc_per_pnt += 25
+    
+    
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
+    
+    print(infectivity_upgrades["air"])
+    if infectivity_upgrades["air"] == 4:
+        infec1.configure(text="Air Transmission \nMaxed", command = '')
+    else:
+        infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
 
 def land_upgrade():
     global points
@@ -83,7 +92,11 @@ def land_upgrade():
         upgrade_cost_b *=64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    infec2.configure(text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b))
+    print(infectivity_upgrades["land"])
+    if infectivity_upgrades["land"] == 4:
+        infec2.configure(text="Land Transmission \nMaxed", command = '')
+    else:
+        infec2.configure(text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b))
 
 def water_upgrade():
     global points
@@ -99,7 +112,11 @@ def water_upgrade():
         upgrade_cost_c *= 64
         infc_per_pnt += 25
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    infec3.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
+    print(infectivity_upgrades["water"])
+    if infectivity_upgrades["water"] == 4:
+        infec3.configure(text="Water Transmission \nMaxed", command = '')
+    else:
+        infec3.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
  
 def tick():
     global count
@@ -128,7 +145,7 @@ def tick():
     
     infections += infectivity
     infc.configure(text=("Infections: " + str(math.floor(infections))))
-    points += (1/infc_per_pnt)*infectivity  
+    points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)  
     pnts.configure(text=("Points: " + str(math.floor(points))))
     
     uninfecpop = math.floor(population - infections)
