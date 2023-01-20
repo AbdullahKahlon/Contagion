@@ -19,6 +19,7 @@ global upgrade_cost_d
 global upgrade_cost_e
 global upgrade_cost_f
 global upgrade_cost_g
+global upgrade_cost_h
 global infectivity_upgrades
 global symptom_upgrades
 global misc_upgrades
@@ -189,11 +190,11 @@ def cure_upgrade():
     if points >= upgrade_cost_g:
         misc_upgrades["cure"] += 1
         points -= upgrade_cost_g
-        cure -= 0.10
+        cure -= 10
         upgrade_cost_g *=10
     pnts.configure(text=("Points: " + str(math.floor(points))))
     
-
+ 
 
  
 def tick():
@@ -244,6 +245,13 @@ def tick():
     
     lethalitylbl.config(text =("Lethality: " + str(round(lethality,2)) + "%"))    
     irate.configure(text=("Infections per day: " + str(infectivity)))
+
+    misc1.config(text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g))
+
+    
+    
+    
+
 
     sleep(0.1)
     t = threading.Timer(0.1, tick)
@@ -333,7 +341,7 @@ lethal1.place(x=250, y=185)
 lethal2.place(x=250, y=290)
 lethal3.place(x=250, y=395)
 
-misc1= Button(window, text="Cure Resistance", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+misc1= Button(window, text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=cure_upgrade)
 misc2= Button(window, text="Mutation Chance", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 misc3= Button(window, text="Misc 3", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 
