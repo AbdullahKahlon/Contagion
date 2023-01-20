@@ -136,7 +136,7 @@ def fever_upgrade():
     if points >= upgrade_cost_d:
         symptom_upgrades["fever"] += 1
         points -= upgrade_cost_d
-        lethality *= 2.5
+        lethality *= 1.5
         upgrade_cost_d *= 27
     pnts.configure(text=("Points: " + str(math.floor(points))))
     print(symptom_upgrades["fever"])
@@ -153,7 +153,7 @@ def nausea_upgrade():
     if points >= upgrade_cost_f:
         symptom_upgrades["nausea"] += 1
         points -= upgrade_cost_f
-        lethality *= 2.5
+        lethality *= 1.5
         upgrade_cost_f *= 27
     pnts.configure(text=("Points: " + str(math.floor(points))))
     print(symptom_upgrades["nausea"])
@@ -170,7 +170,7 @@ def cough_upgrade():
     if points >= upgrade_cost_e:
         symptom_upgrades["cough"] += 1
         points -= upgrade_cost_e
-        lethality *= 2.5
+        lethality *= 1.5
         upgrade_cost_e *= 27
     pnts.configure(text=("Points: " + str(math.floor(points))))
     print(symptom_upgrades["cough"])
@@ -235,21 +235,22 @@ def tick():
     else:
         unfecpop.configure(text=("Population Uninfected: " + str(math.floor(population - infections))))
     
-    alivepop.config(text=("Population Alive: " + str(population-deadpop)))
+    alivepop.config(text=("Population Alive: " + str(math.floor(population-deadpop))))
     drate.config(text=("Deaths per day: " + str(round(infections*lethality,2))))
 
     count+=1
     currentdate = datetime.date.today() + datetime.timedelta(days=count)
     datelbl.configure(text=("Date: " + str(currentdate)))
     
+    lethalitylbl.config(text =("Lethality: " + str(round(lethality,2)) + "%"))    
     irate.configure(text=("Infections per day: " + str(infectivity)))
 
-    sleep(1)
-    t = threading.Timer(1.0, tick)
+    sleep(0.1)
+    t = threading.Timer(0.1, tick)
     t.start()
 
 
-t = threading.Timer(1.0, tick)
+t = threading.Timer(0.1, tick)
 t.start() 
 
 
