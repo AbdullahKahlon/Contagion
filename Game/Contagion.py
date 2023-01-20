@@ -27,6 +27,7 @@ global mutation
 global population
 global cure
 global dayspassed
+global deadpop
 mutation = 0.001
 lethality = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
@@ -49,6 +50,7 @@ currentdate = ''
 population = 8011626402
 cure = 0
 dayspassed = 0
+deadpop = 0
 
 def add():
     global infections
@@ -174,6 +176,8 @@ def cough_upgrade():
     print(symptom_upgrades["cough"])
     if symptom_upgrades["cough"] == 4:
         lethal2.configure(text="Cough \nMaxed", command = '')
+    else:
+        lethal2.configure(text="Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_e))
     
         
 def cure_upgrade():
@@ -206,12 +210,14 @@ def tick():
     global upgrade_cost_b, upgrade_cost_c
     global cure
     global dayspassed
+    global deadpop
     dayspassed += 1
     
     if dayspassed > 0:
         cure += round(random.uniform(-0.33, 0.66), 3)
     cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
 
+    deadpop += infections*lethality
     infections -= infections*lethality
     population -= infections*lethality
 
@@ -229,16 +235,14 @@ def tick():
     else:
         unfecpop.configure(text=("Population Uninfected: " + str(math.floor(population - infections))))
     
+    alivepop.config(text=("Population Alive: " + str(population-deadpop)))
+    drate.config(text=("Deaths per day: " + str(round(infections*lethality,2))))
+
     count+=1
     currentdate = datetime.date.today() + datetime.timedelta(days=count)
     datelbl.configure(text=("Date: " + str(currentdate)))
     
     irate.configure(text=("Infections per day: " + str(infectivity)))
-
-    
-    
-    
-
 
     sleep(1)
     t = threading.Timer(1.0, tick)
@@ -283,6 +287,9 @@ alivepop.place(x=750, y=55)
 
 unfecpop=Label(window, text=("Population Uninfected: " + str(population - infections )), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 unfecpop.place(x=750, y=80)
+
+lethalitylbl = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+lethalitylbl.place(x=375, y=518)
 
 datelbl=Label(window, text=("Date: " + str(currentdate)), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 datelbl.place(x=750, y=105)
