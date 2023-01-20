@@ -29,9 +29,10 @@ global population
 global cure
 global dayspassed
 global deadpop
+global tickspeed
 mutation = 0.001
 lethality = 0.001
-misc_upgrades = {"cure": 0, "mutation": 0, "misc": 0}
+misc_upgrades = {"cure": 0, "mutation": 0, "tick speed": 0}
 symptom_upgrades = {"nausea": 0, "cough": 0, "fever": 0}
 infectivity_upgrades = {"air": 0, "land": 0, "water": 0}
 upgrade_cost_a = 4
@@ -41,7 +42,9 @@ upgrade_cost_d = 3
 upgrade_cost_e = 9
 upgrade_cost_f = 27
 upgrade_cost_g = 1000
+upgrade_cost_h = 1000
 infections = -1
+tickspeed = 1
 infectivity = 1
 multiplier = 1
 points = 4
@@ -193,9 +196,21 @@ def cure_upgrade():
         cure -= 10
         upgrade_cost_g *=10
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    
- 
 
+def tick_upgrade():
+    global points
+    global cure
+    global upgrade_cost_h
+    global misc_upgrades
+    global tickspeed
+
+    if points >= upgrade_cost_h:
+        misc_upgrades["tick speed"] += 1
+        points -= upgrade_cost_h
+        tickspeed -= 0.1
+        upgrade_cost_h *=10
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+    
  
 def tick():
     global count
@@ -212,6 +227,7 @@ def tick():
     global cure
     global dayspassed
     global deadpop
+    global tickspeed
     dayspassed += 1
     
     if dayspassed > 0:
@@ -247,18 +263,19 @@ def tick():
     irate.configure(text=("Infections per day: " + str(infectivity)))
 
     misc1.config(text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g))
+    misc3.config(text="Tick Speed " +str(misc_upgrades["tick speed"]+1) +"\nCost: " +str(upgrade_cost_h))
 
     
     
     
 
 
-    sleep(0.1)
-    t = threading.Timer(0.1, tick)
+    sleep(tickspeed)
+    t = threading.Timer(tickspeed, tick)
     t.start()
 
 
-t = threading.Timer(0.1, tick)
+t = threading.Timer(tickspeed, tick)
 t.start() 
 
 
@@ -342,8 +359,8 @@ lethal2.place(x=250, y=290)
 lethal3.place(x=250, y=395)
 
 misc1= Button(window, text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=cure_upgrade)
-misc2= Button(window, text="Mutation Chance", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
-misc3= Button(window, text="Misc 3", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+misc2= Button(window, text="Mutation Chance ", height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
+misc3= Button(window, text="Tick Speed " +str(misc_upgrades["tick speed"]+1) +"\nCost: " +str(upgrade_cost_h), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12),command=tick_upgrade)
 
 misc1.place(x=475, y=185)
 misc2.place(x=475, y=290)
