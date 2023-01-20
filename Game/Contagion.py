@@ -30,6 +30,7 @@ global cure
 global dayspassed
 global deadpop
 global tickspeed
+global alivepop
 mutation = 0.001
 lethality = 0.001
 misc_upgrades = {"cure": 0, "mutation": 0, "tick speed": 0}
@@ -55,6 +56,7 @@ population = 8011626402
 cure = 0
 dayspassed = 0
 deadpop = 0
+alivepop = population
 
 def add():
     global infections
@@ -235,6 +237,7 @@ def tick():
     cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
 
     deadpop += infections*lethality
+    livingpop = population - deadpop
     infections -= infections*lethality
     population -= infections*lethality
 
@@ -245,12 +248,12 @@ def tick():
     points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)  
     pnts.configure(text=("Points: " + str(math.floor(points))))
     
-    uninfecpop = math.floor(population - infections)
+    uninfecpop = livingpop-infections
     if uninfecpop <= 0:
         infectivity = 0
         infections = population
     else:
-        unfecpop.configure(text=("Population Uninfected: " + str(math.floor(population - infections))))
+        unfecpop.configure(text=("Population Uninfected: " + str(math.floor(livingpop - infections))))
     
     alivepop.config(text=("Population Alive: " + str(math.floor(population-deadpop))))
     drate.config(text=("Deaths per day: " + str(round(infections*lethality,2))))
@@ -259,7 +262,7 @@ def tick():
     currentdate = datetime.date.today() + datetime.timedelta(days=count)
     datelbl.configure(text=("Date: " + str(currentdate)))
     
-    lethalitylbl.config(text =("Lethality: " + str(round(lethality,2)) + "%"))    
+    lethalitylbl.config(text =("Lethality: " + str(round(lethality*100,2)) + "%"))    
     irate.configure(text=("Infections per day: " + str(infectivity)))
 
     misc1.config(text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g))
