@@ -209,7 +209,7 @@ def tick_upgrade():
     if points >= upgrade_cost_h:
         misc_upgrades["tick speed"] += 1
         points -= upgrade_cost_h
-        tickspeed -= 0.1
+        tickspeed -= 0.17
         upgrade_cost_h *=10
     pnts.configure(text=("Points: " + str(math.floor(points))))
     
@@ -263,7 +263,7 @@ def tick():
     datelbl.configure(text=("Date: " + str(currentdate)))
     
     lethalitylbl.config(text =("Lethality: " + str(round(lethality*100,2)) + "%"))    
-    irate.configure(text=("Infections per day: " + str(infectivity)))
+    irate.configure(text=("Infections per day: " + str(round(infectivity,2))))
 
     misc1.config(text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g))
     misc3.config(text="Tick Speed " +str(misc_upgrades["tick speed"]+1) +"\nCost: " +str(upgrade_cost_h))
