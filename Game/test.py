@@ -1,11 +1,15 @@
-import datetime
-  
-# For using listdir()
-import os
+namestring = '''global infections
+    global infectivity
+    global points
+    global infc_per_pnt
+    global cure'''
 
-amount = 12
 
+names = namestring.split()
 
-for i in range(amount+1):
-    date = datetime.date.today() + datetime.timedelta(days=i)
-    print(date)
+print("global ", end="")
+
+for i in range(len(names)):
+    if i%2!=0:
+        print(names[i], end="")
+        print(", ", end="")
