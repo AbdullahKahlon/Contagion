@@ -8,9 +8,9 @@ import random
 
 
 #declare variables, we will be making all variables global in all functions to take advantage of tkinters functionality, as well as to avoid having to pass in and return values every tick
-global win, infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, alivepop, livingpop, infc_per_pnt
+global win, infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, alivepop, livingpop, infc_per_pnt
 
-win = False
+win = 0
 
 mutation = 0.001 #mutation chance
 lethality = 0.001 #lethality, controls how fast people die
@@ -28,13 +28,12 @@ upgrade_cost_f = 27
 upgrade_cost_g = 1000
 upgrade_cost_h = 1000
 
-infections = -1 #infections start at -1, as it takes about 2 ticks for the window to load in so it shows 1 infection when the player starts
+infections = 1 #infections start at 1, as it takes about 2 ticks for the window to load in so it shows 3 infection when the player starts
 tickspeed = 1 #starting tick speed
-infectivity = 1000000000 #infections per second
-multiplier = 1 #infection multiplier, used to increase infections per second
+infectivity = 1 #infections per second
 points = 4 #starting upgrade points
 infc_per_pnt = 25 #infections needed to earn a point
-count = 0 
+count = 0 #no idea what this is for, if i remove it everything breaks, :)
 currentdate = '' #initialize date value
 population = 8011626402 #world population
 cure = 0 #cure percentage
@@ -45,23 +44,29 @@ livingpop = 0 #used to keep track of population alive
 
 
 def tick():
-    global win, infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
+    global win, infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
 
     
     deadpop += infections*lethality
-    infections -= deadpop
+    print(infections*lethality)
+    if (infections + (infectivity - (infections*lethality))) > (population - deadpop):
+        infectivity = 0
+    infections += infectivity - (infections*lethality)
     population -= deadpop
-    
+
+
     uninfecpop = population-infections
+
     if uninfecpop-infectivity <= 0:
         infectivity = 0
         infections = population
         unfecpop.configure(text=("Population Uninfected: 0"))
+    
     else:
         unfecpop.configure(text=("Population Uninfected: " + str(math.floor(uninfecpop))))
 
     if population-lethality <= 0:
-        win = True
+        win = 2
         population = 0
         infections = 0
         lethality = 0
@@ -74,30 +79,34 @@ def tick():
 
     dayspassed += 1
     
-    if dayspassed > 20:
-        cure += round(random.uniform(-0.33, 0.66), 3)
+    if dayspassed > 0:
+        cure += round(random.uniform(-0.33, 1.66), 3)
+    if cure < 0:
+        cure = 0.01
     cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
 
+    if cure >= 100:
+        win = 1
+
     
 
 
-    print("t")
     
-    infections += infectivity
+    
     infc.configure(text=("Infections: " + str(math.floor(infections))))
-    points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)  
+    points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)+((infections+lethality)/50) 
     pnts.configure(text=("Points: " + str(math.floor(points))))
     
     
     
     
-    drate.config(text=("Deaths per day: " + str(round(infections*lethality,2))))
+    drate.config(text=("Deaths per day: " + str(round(infections*lethality,3))))
 
     count+=1
     currentdate = datetime.date.today() + datetime.timedelta(days=count)
     datelbl.configure(text=("Date: " + str(currentdate)))
     
-    lethalitylbl.config(text =("Lethality: " + str(round(lethality*100,2)) + "%"))    
+    lethalitylbl.config(text =("Lethality: " + str(round(lethality,3)) + "%"))    
     irate.configure(text=("Infections per day: " + str(round(infectivity,2))))
 
     misc1.config(text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g))
@@ -107,10 +116,20 @@ def tick():
     
     
 
-    if win == False:
+    if win == 0:
         sleep(tickspeed)
         t = threading.Timer(tickspeed, tick)
         t.start()
+    elif win == 1:
+        for widget in window.winfo_children():
+            widget.destroy()
+        gameover=Label(window, text=("Game Over"), fg='yellow', bg='black', font=("Fixedsys Excelsior 3.01", 70))
+        reason=Label(window, text=("A vaccine was successfully developed for your disease. Try again."), fg='blue', bg='black', font=("Fixedsys Excelsior 3.01", 15))
+        gameover.place(x=310, y=100)
+        reason.place(x=230, y=215)
+        creditslbl=Label(window, text=("Credits" + "\nGame developed by Abdullah Shahid and Nathan Yoon" + "\n Art? What art" + "\n Music taken off google dont sue pls" + "\n Shout out Tai Poole for showing us the light" + "\nbig thank you to COVID-19 and Plague Inc they did it first"), fg='#333333', bg='black', font=("Fixedsys Excelsior 3.01", 15))
+        creditslbl.place(x=220, y=400)
+        print("lose")
     else:
         sleep(2)
         for widget in window.winfo_children():
@@ -119,22 +138,27 @@ def tick():
         daystaken=Label(window, text=("You eradicated the human race in " + str(dayspassed) + " days."), fg='red', bg='black', font=("Fixedsys Excelsior 3.01", 15))
         gameover.place(x=310, y=100)
         daystaken.place(x=305, y=215)
-        creditslbl=Label(window, text=("Credits" + "\nGame developed by Abdullah Shahid and Nathan Yoon" + "\n Art? What art" + "\n Music taken off google dont sue pls" + "\n Shout out Tai Poole for showing us the light" + "\nbig thank you to COVID-19 and Plague Inc they did it first"), fg='#333333', bg='black', font=("Fixedsys Excelsior 3.01", 15))
+        creditslbl=Label(window, text=("Credits" + "\nGame developed by Abdullah Shahid and Nathan Yoon" + "\n Art? What art" + "\n Shout out Tai Poole for showing us the light" + "\nbig thank you to COVID-19 and Plague Inc they did it first"), fg='#333333', bg='black', font=("Fixedsys Excelsior 3.01", 15))
         creditslbl.place(x=220, y=400)
-
+        print("win")
 
 def add():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
+    global uninfecpop, infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
     print("a")
-
-    if not (infections + infectivity > population):
+    uninfecpop = population-infections
+    if not (infections + infectivity > (population-deadpop)):
         infections += 1*infectivity
         points += (1/infc_per_pnt)*infectivity+(0.1*cure)
         pnts.configure(text=("Points: " + str(math.floor(points))))
         infc.configure(text=("Infections: " + str(math.floor(infections))))
+
+    if uninfecpop-infectivity <= 0:
+        infectivity = 0
+        infections = population
+        unfecpop.configure(text=("Population Uninfected: 0"))
     
 def air_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
 
     if points >= upgrade_cost_a:
         infectivity_upgrades["air"] += 1
@@ -153,7 +177,7 @@ def air_upgrade():
         infec1.configure(text="Air Transmission " + str(infectivity_upgrades["air"]+1) + "\nCost: " + str(upgrade_cost_a))
 
 def land_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
 
     if points >= upgrade_cost_b:
         infectivity_upgrades["land"] += 1
@@ -169,7 +193,7 @@ def land_upgrade():
         infec2.configure(text="Land Transmission " + str(infectivity_upgrades["land"]+1) + "\nCost: " + str(upgrade_cost_b))
 
 def water_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
 
     if points >= upgrade_cost_c:
         infectivity_upgrades["water"] += 1
@@ -185,7 +209,7 @@ def water_upgrade():
         infec3.configure(text="Water Transmission " + str(infectivity_upgrades["water"]+1) + "\nCost: " + str(upgrade_cost_c))
 
 def fever_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, alivepop, infc_per_pnt
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, alivepop, infc_per_pnt
 
     if points >= upgrade_cost_d:
         symptom_upgrades["fever"] += 1
@@ -200,7 +224,7 @@ def fever_upgrade():
         lethal1.configure(text="Fever " + str(symptom_upgrades["fever"]+1) + "\nCost: " + str(upgrade_cost_d))
 
 def nausea_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
 
     if points >= upgrade_cost_f:
         symptom_upgrades["nausea"] += 1
@@ -215,7 +239,7 @@ def nausea_upgrade():
         lethal3.configure(text="Nausea " + str(symptom_upgrades["nausea"]+1) + "\nCost: " + str(upgrade_cost_f))
 
 def cough_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
 
     if points >= upgrade_cost_e:
         symptom_upgrades["cough"] += 1
@@ -231,7 +255,7 @@ def cough_upgrade():
     
         
 def cure_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
 
 
     if points >= upgrade_cost_g:
@@ -242,12 +266,12 @@ def cure_upgrade():
     pnts.configure(text=("Points: " + str(math.floor(points))))
 
 def tick_upgrade():
-    global infections, multiplier, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
+    global infections, infectivity, count, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
 
     if points >= upgrade_cost_h:
         misc_upgrades["tick speed"] += 1
         points -= upgrade_cost_h
-        tickspeed -= 0.17
+        tickspeed -= 0.1
         upgrade_cost_h *=10
     pnts.configure(text=("Points: " + str(math.floor(points))))
     
