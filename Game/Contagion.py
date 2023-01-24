@@ -12,7 +12,7 @@ global win, infections, infectivity, currentdate, points, upgrade_cost_a, upgrad
 
 win = 0
 
-mutation = 0.2 #mutation chance
+mutation = 0.8 #mutation chance
 lethality = 0.001 #lethality, controls how fast people die
 misc_upgrades = {"cure": 0, "mutation": 0, "tick speed": 0} #dictionary to keep track of miscellaneous upgrades
 symptom_upgrades = {"nausea": 0, "cough": 0, "fever": 0} #dictionary to keep track of lethality upgrades
@@ -26,7 +26,7 @@ upgrade_cost_d = 3
 upgrade_cost_e = 9
 upgrade_cost_f = 27
 upgrade_cost_g = 1000
-upgrade_cost_h = 2000
+upgrade_cost_h = 1000
 upgrade_cost_i = 1000
 
 infections = 1 #infections start at 1, as it takes about 2 ticks for the window to load in so it shows 3 infection when the player starts
@@ -95,9 +95,10 @@ def tick():
     
     
     infc.configure(text=("Infections: " + str(math.floor(infections))))
-    points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)+1
+    points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)+5000*lethality-4
+    print(5000*lethality)
     pnts.configure(text=("Points: " + str(math.floor(points))))
-    
+    mutate_label.config(text =("Mutation Rate: " + str(round(mutation,2))))
     
     
     
@@ -113,7 +114,7 @@ def tick():
     misc2.config(text="Mutation Chance " + str(misc_upgrades["mutation"]+1) + "\nCost: " +str(upgrade_cost_h))
     misc3.config(text="Tick Speed " +str(misc_upgrades["tick speed"]+1) +"\nCost: " +str(upgrade_cost_i))
 
-    print(mutation)
+
     
     
     
@@ -327,32 +328,32 @@ def fever_upgrade():
 def nausea_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
 
-    if points >= upgrade_cost_f:
-        symptom_upgrades["nausea"] += 1
-        points -= upgrade_cost_f
-        lethality *= 1.5
-        upgrade_cost_f *= 27
-    pnts.configure(text=("Points: " + str(math.floor(points))))
-
-    if symptom_upgrades["nausea"] == 4:
-        lethal2.configure(text="Symptoms: Nausea\nMaxed", command = '')
-    else:
-        lethal2.configure(text="Symptoms: Nausea " + str(symptom_upgrades["nausea"]+1) + "\nCost: " + str(upgrade_cost_f))
-
-def cough_upgrade():
-    global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
-
     if points >= upgrade_cost_e:
-        symptom_upgrades["cough"] += 1
+        symptom_upgrades["nausea"] += 1
         points -= upgrade_cost_e
         lethality *= 1.5
         upgrade_cost_e *= 27
     pnts.configure(text=("Points: " + str(math.floor(points))))
 
+    if symptom_upgrades["nausea"] == 4:
+        lethal2.configure(text="Symptoms: Nausea\nMaxed", command = '')
+    else:
+        lethal2.configure(text="Symptoms: Nausea " + str(symptom_upgrades["nausea"]+1) + "\nCost: " + str(upgrade_cost_e))
+
+def cough_upgrade():
+    global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
+
+    if points >= upgrade_cost_f:
+        symptom_upgrades["cough"] += 1
+        points -= upgrade_cost_f
+        lethality *= 1.5
+        upgrade_cost_f *= 27
+    pnts.configure(text=("Points: " + str(math.floor(points))))
+
     if symptom_upgrades["cough"] == 4:
         lethal3.configure(text="Symptoms: Cough \nMaxed", command = '')
     else:
-        lethal3.configure(text="Symptoms: Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_e))
+        lethal3.configure(text="Symptoms: Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_f))
     
         
 def cure_upgrade():
@@ -375,7 +376,7 @@ def mutate_upgrade():
     if points >= upgrade_cost_h:
         misc_upgrades["mutation"] += 1
         points -= upgrade_cost_h
-        mutation = (1.32119**(float(misc_upgrades["mutation"]+1)))-1.19397
+        mutation = (1.52119**(float(misc_upgrades["mutation"]+1)))
         upgrade_cost_h *=7
     pnts.configure(text=("Points: " + str(math.floor(points))))
     misc2.configure(text="Mutation Chance " + str(misc_upgrades["mutation"]+1) + "\nCost: " +str(upgrade_cost_h))
@@ -434,8 +435,7 @@ alivepop.place(x=750, y=55)
 unfecpop=Label(window, text=("Population Uninfected: " + str(population - infections )), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 unfecpop.place(x=750, y=80)
 
-lethalitylbl = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-lethalitylbl.place(x=375, y=518)
+
 
 datelbl=Label(window, text=("Date: " + str(currentdate)), fg='green', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 datelbl.place(x=750, y=105)
@@ -448,6 +448,12 @@ drate.place(x=12, y=75)
 
 cure_prog = Label(window, text =("Cure Progress: 0%"), fg="#1AA7EC", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
 cure_prog.place(x=25, y=518)
+
+lethalitylbl = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+lethalitylbl.place(x=315, y=518)
+
+mutate_label = Label(window, text =("Mutation Rate: 0%"), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+mutate_label.place(x=610, y=518)
 
 
 
