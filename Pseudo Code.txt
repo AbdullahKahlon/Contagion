@@ -70,7 +70,9 @@ create window
 adjust pixels and title, make not resizeable
 
 
-create widgets, labels for all the upgrades, title, infections, infections per day
+create widgets, labels for all the upgrades, title, infections, infections per day, deaths per day, population alive, unaffected, date, points, cure progress, lethality, all different colours and fonts
+
+create a 3x3 grid of buttons for the upgrades and the infect click button in the corner which is the logo
 
 
   
