@@ -36,7 +36,7 @@ points = 4 #starting upgrade points
 infc_per_pnt = 25 #infections needed to earn a point
 currentdate = '' #initialize date value
 population = 8011626402 #world population
-cure = 0 #cure percentage
+cure = 0.00 #cure percentage
 dayspassed = 0 #variable used to count days since game started
 deadpop = 0 #used to keep track of deaths
 livingpop = 0 #used to keep track of population alive
@@ -458,11 +458,11 @@ irate.place(x=12, y=55)
 drate=Label(window, text=("Deaths per day: " + str(lethality)), fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12))
 drate.place(x=12, y=75)
 
-cure_prog = Label(window, text =("Cure Progress: 0%"), fg="#1AA7EC", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
+cure_prog = Label(window, text =("Cure Progress: 0.00%"), fg="#1AA7EC", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
 cure_prog.place(x=25, y=518)
 
 lethalitylbl = Label(window, text =("Lethality: 0%"), fg="red", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
-lethalitylbl.place(x=315, y=518)
+lethalitylbl.place(x=345, y=518)
 
 mutate_label = Label(window, text =("Mutation Rate: 0%"), fg="green", bg = 'black', font=("Fixedsys Excelsior 3.01", 20))
 mutate_label.place(x=610, y=518)
@@ -489,8 +489,8 @@ infec2.place(x=25, y=290)
 infec3.place(x=25, y=395)
 
 lethal1= Button(window, text="Symptom: Fever " + str(symptom_upgrades["fever"]+1) + "\nCost: " + str(upgrade_cost_d), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=fever_upgrade)
-lethal3= Button(window, text="Symptom: Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_e), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=cough_upgrade)
-lethal2= Button(window, text="Symptom: Nausea " + str(symptom_upgrades["nausea"]+1) + "\nCost: " + str(upgrade_cost_f), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=nausea_upgrade)
+lethal3= Button(window, text="Symptom: Cough " + str(symptom_upgrades["cough"]+1) + "\nCost: " + str(upgrade_cost_f), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=cough_upgrade)
+lethal2= Button(window, text="Symptom: Nausea " + str(symptom_upgrades["nausea"]+1) + "\nCost: " + str(upgrade_cost_e), height=3, width=22, fg='gray', bg='black', font=("Fixedsys Excelsior 3.01", 12), command=nausea_upgrade)
 
 lethal1.place(x=250, y=185)
 lethal2.place(x=250, y=290)
