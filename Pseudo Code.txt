@@ -27,15 +27,52 @@ def passive:
   
   mutatecheck, if rolls a number less than the mutation chance runs the mutation command
   
+def mutate:
+  run another random number generator, between 1 and 11 9 for each upgrade and 2 for random number of points and infections
+  
+  if run 1 than give points
+  if 2 than give infections
+  if 3-11 than run corresponding upgrade function but add the points cost to points first
+ 
+  
 def lethal upgrades:
-  chance of death += multiplier
-  cure rate += multiplier
+  if have enough points to upgrade than upgrade 
+  subtract cost from points
+  lethality *= x
+  cost *= x
+  
+  if value of key = max than lock the button and make no command and replace cost with maxed
+  
+repeat function 3 times for the three upgrades
+
   
 def infectious upgrades:
-  passive infection gain += multiplier
+  if have enough points to upgrade then run function
+  subtract cost amount of points
+  infectivity *=
+  cost *=
+  infections per point += 
+  configure points button
+  
+  if value of key = max than lock the button to no command and replace cost text with maxed
+ 
+repeat three times for the three types of upgrades
+
   
 def misc upgrades:
+  if have enough points to upgrade than run function
+  decrease tick rate, 
+  increase mutation rate
+  or decrease the cure percentage
   
+
+create window
+adjust pixels and title, make not resizeable
+
+
+create widgets, labels for all the upgrades, title, infections, infections per day
+
+
   
 
   
