@@ -24,7 +24,8 @@ def passive:
   configure the buttons to display the correct information of date, points, and infections
   
   configure any other buttons since when upgrading might not update the button to the right cost value
-
+  
+  mutatecheck, if rolls a number less than the mutation chance runs the mutation command
   
 def lethal upgrades:
   chance of death += multiplier
