@@ -1,22 +1,30 @@
-Constants: Dictionary:
-  2 dictionaries for each category of upgrade, infectivity and lethality, the key is the name of the upgrade and the value the tier lvl of the upgrade
-  variable for cure which increases at a constant rate, cure progress upgrades will decrease the rate it develops or just remove % of completion. 
+Variables, population, dead pop, infected pop, alive pop, lethality, infectivity, cure progress, mutation chance, upgrade cost for each upgrade, tick speed, days passed, points, infections per point, current date
 
-def starter_region:
-  pick a region of the world to start with, get a region specific upgrade for free, randomize between lvl 1 and lvl 3
-  Plus 1 upgrade point that the user can choose for any other upgrade that is lvl 0
-  
+Dictionary:
+  3 dictionaries for the 3 types of upgrades, infectivity, lethality and misc. keys are the names of the specific upgrade, value is the tier of the upgrade.  
+ 
 def click:
-  infections += multiplier
-  points += point multiplier
+  when button clicked, 
+  add <lethality> number of infections to infected population
+  add 1/infections per point to points. Maybe add some scaling with cure?
+  configure the buttons to display the correct information of points and infections
   
 def passive:
-  infections += passive infection gain not from clicking
-  cure progress += cure rate
-  mutation dice roll
-  cure progress dice roll
-  (dice roll will be a random, say 1 in 15 chance that it occurs, if True then mutation (another random upgrade or bonus points given))
-  (for cure, the dice roll will randomly increase the rate in for cure progress or increase % completion simulating a "breakthrough")
+  passive, runs every tick rate. 
+  check for win or lose condition. If win, make dead population = starting population and make everything else zero. Go to end game win screen
+  if lose, go to lose end game screen 
+  
+  win screen will display congrats message and how many days it took
+  lose screen will display loss message.
+  
+  dayspassed += 1
+  
+  add x number of infections to infected population
+  add 1/infections per point to points
+  configure the buttons to display the correct information of date, points, and infections
+  
+  configure any other buttons since when upgrading might not update the button to the right cost value
+
   
 def lethal upgrades:
   chance of death += multiplier
