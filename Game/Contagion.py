@@ -42,28 +42,30 @@ deadpop = 0 #used to keep track of deaths
 livingpop = 0 #used to keep track of population alive
 
 
-
+#function that runs constantly, updating variables that need to be updated constantly
 def tick():
     global win, infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
 
-    
-    deadpop += infections*lethality
+    deadpop += infections*lethality #add the amount of people that died this tick to death counter
+    infections += infectivity - (infections*lethality) #add the amount of people infected this tick to total infections, accounting for infected people that died
+    population -= deadpop #subtract dead people from alive people
+    uninfecpop = population-infections #subtract uninfected people from infected people
+
+    #if everyone that is alive is infected, or will be within one tick, and there are no more people to infect, set infectivity to 0
     if (infections + (infectivity - (infections*lethality))) > (population - deadpop):
         infectivity = 0
-    infections += infectivity - (infections*lethality)
-    population -= deadpop
-
-
-    uninfecpop = population-infections
-
+    
+    #if everyone alive is infected, set infectivity to 0, and change the uninfected population label to always say 0
     if uninfecpop-infectivity <= 0:
         infectivity = 0
         infections = population
         unfecpop.configure(text=("Population Uninfected: 0"))
     
+    #if there are sitll people to infect, keep updated the uninfected population lavel
     else:
         unfecpop.configure(text=("Population Uninfected: " + str(math.floor(uninfecpop))))
 
+    #if everyone dies, set lethality and infections to 0, configure labels accordingly, and change the win variable to case 2
     if population-lethality <= 0:
         win = 2
         population = 0
@@ -71,60 +73,62 @@ def tick():
         lethality = 0
         alivepop.config(text=("Population Alive: 0"))
         infc.configure(text=("Infections: 0"))
+    #if people are still alive, keep updating the label
     else:   
         alivepop.config(text=("Population Alive: " + str(math.floor(population-deadpop))))
 
     
-
+    #increase days passed with every tick
     dayspassed += 1
     
+    #start the cure percentage counter after 30 days
     if dayspassed > 30:
         cure += round(random.uniform(-0.33, 1.00), 3)
+    #do not let cure percentage drop below 0
     if cure < 0:
         cure = 0.01
-    cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%"))
+    cure_prog.configure(text=("Cure Progress: " + str(round(cure,3)) + "%")) #update cure percent label
 
+    #if cure percentage reaches 100, set win condition to 1, which is actually a loss
     if cure >= 100:
         win = 1
 
-    
+    #roll a dice between 0 and 100, and if the result is lower than the mutation chance then run the mutate function
     mutatecheck = round(random.uniform(0.0, 100.0), 1)
     if mutatecheck < mutation:
         mutate()
 
     
-    
+    #update the infections label
     infc.configure(text=("Infections: " + str(math.floor(infections))))
-    points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)+5000*lethality-4
-    print(5000*lethality)
-    pnts.configure(text=("Points: " + str(math.floor(points))))
-    mutate_label.config(text =("Mutation Rate: " + str(round(mutation,2))))
+    points += ((1/infc_per_pnt)*infectivity)+(cure*1.07)+5000*lethality-4 #give player points scaling with their infections and lethality
+    pnts.configure(text=("Points: " + str(math.floor(points)))) #update the points label
+    mutate_label.config(text =("Mutation Rate: " + str(round(mutation,2)) + "%")) #update the mutation chance label
     
     
     
-    drate.config(text=("Deaths per day: " + str(round(infections*lethality,3))))
+    drate.config(text=("Deaths per day: " + str(round(infections*lethality,3)))) #update the deaths per day label
 
-    currentdate = datetime.date.today() + datetime.timedelta(days=dayspassed)
-    datelbl.configure(text=("Date: " + str(currentdate)))
+    currentdate = datetime.date.today() + datetime.timedelta(days=dayspassed) #calculate current date based on days passed since game started
+    datelbl.configure(text=("Date: " + str(currentdate))) ##update the current date label
     
-    lethalitylbl.config(text =("Lethality: " + str(round(lethality,3)) + "%"))    
-    irate.configure(text=("Infections per day: " + str(round(infectivity,2))))
+    lethalitylbl.config(text =("Lethality: " + str(round(lethality,3)) + "%")) #update the lethality label
+    irate.configure(text=("Infections per day: " + str(round(infectivity,2)))) #update the infectivity label
 
+    #update the misc buttons
     misc1.config(text="Cure Resistance " + str(misc_upgrades["cure"]+1) + "\nCost: " +str(upgrade_cost_g))
     misc2.config(text="Mutation Chance " + str(misc_upgrades["mutation"]+1) + "\nCost: " +str(upgrade_cost_h))
-    misc3.config(text="Tick Speed " +str(misc_upgrades["tick speed"]+1) +"\nCost: " +str(upgrade_cost_i))
-
-
+    misc3.config(text="Tick Speed " +str(misc_upgrades["tick speed"]+1) +"\nCost: " +str(upgrade_cost_i))   
     
     
-    
-    
-
+    #check if a win/loss condition was satisfied this tick
     if win == 0:
+        #if not, run the tick function again
         sleep(tickspeed)
         t = threading.Timer(tickspeed, tick)
         t.start()
     elif win == 1:
+        #if cure percentage reached 100, clear everything of the screen and display loss screen
         for widget in window.winfo_children():
             widget.destroy()
         gameover=Label(window, text=("Game Over"), fg='yellow', bg='black', font=("Fixedsys Excelsior 3.01", 70))
@@ -135,6 +139,7 @@ def tick():
         creditslbl.place(x=220, y=400)
         print("lose")
     else:
+        #if everyone died, clear everything of the screen and display win screen
         sleep(2)
         for widget in window.winfo_children():
             widget.destroy()
@@ -148,19 +153,24 @@ def tick():
 
 def mutate():
     global win, infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
+    #roll a dice between 1 and 5 to decide type of mutation
     mutationtype = random.randint(1,5)
     if mutationtype == 5:
+        #mutation type 1: increase points by a random amount
         pnts.config(fg="green")
         points += random.randint(1,20)*infections
         points += random.randint(0,10000)
         sleep(0.3)
         pnts.config(fg="#DFBD69")
     elif mutationtype == 4:
+        #mutation type 2: increase infections by a random amount
         infc.config(fg="green")
         infections += random.randint(0,100000)
         sleep(0.3)
         infc.config(fg="white")
     else:
+        #mutation type 3: pick a random upgrade, give player the points needed to upgrade, and then upgrade it for the player
+        #if the player has already maxed that upgrade, rerun the mutate function and try again
         upgrade = random.randint(1,9)
         if upgrade == 1:
             if infectivity_upgrades["air"] < 4:
@@ -244,16 +254,18 @@ def mutate():
             tick_upgrade()
 
 
-
+#gives infections for every click of the infect button
 def add():
     global uninfecpop, infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i,  infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
     uninfecpop = population-infections
+    #only add infections if there are still people who are alive and uninfected
     if not (infections + infectivity > (population-deadpop)):
         infections += 1*infectivity
-        points += (1/infc_per_pnt)*infectivity+(0.1*cure)
+        points += (1/infc_per_pnt)*infectivity+(1.07*cure) #give points based on infections
         pnts.configure(text=("Points: " + str(math.floor(points))))
         infc.configure(text=("Infections: " + str(math.floor(infections))))
 
+    #if there are is no one left to infect, update labels and varaibles accordingly
     if uninfecpop-infectivity <= 0:
         infectivity = 0
         infections = population
@@ -261,7 +273,7 @@ def add():
     
 def air_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
-
+    #check if player has enough points for the upgrade, increase infectivity, subtract points from players wallet, increase the next upgrade's cost and increase the amount of infections needed to earn a point
     if points >= upgrade_cost_a:
         infectivity_upgrades["air"] += 1
         points -= upgrade_cost_a
@@ -280,7 +292,7 @@ def air_upgrade():
 
 def land_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
-
+    #check if player has enough points for the upgrade, increase infectivity, subtract points from players wallet, increase the next upgrade's cost and increase the amount of infections needed to earn a point
     if points >= upgrade_cost_b:
         infectivity_upgrades["land"] += 1
         points -= upgrade_cost_b
@@ -296,7 +308,7 @@ def land_upgrade():
 
 def water_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, infc_per_pnt
-
+    #check if player has enough points for the upgrade, increase infectivity, subtract points from players wallet, increase the next upgrade's cost and increase the amount of infections needed to earn a point
     if points >= upgrade_cost_c:
         infectivity_upgrades["water"] += 1
         points -= upgrade_cost_c
@@ -312,7 +324,7 @@ def water_upgrade():
 
 def fever_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed, alivepop, infc_per_pnt
-
+    #check if player has enough points for the upgrade, increase lethality, subtract points from players wallet, increase the next upgrade's cost
     if points >= upgrade_cost_d:
         symptom_upgrades["fever"] += 1
         points -= upgrade_cost_d
@@ -327,7 +339,7 @@ def fever_upgrade():
 
 def nausea_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
-
+    #check if player has enough points for the upgrade, increase lethality, subtract points from players wallet, increase the next upgrade's cost
     if points >= upgrade_cost_e:
         symptom_upgrades["nausea"] += 1
         points -= upgrade_cost_e
@@ -342,7 +354,7 @@ def nausea_upgrade():
 
 def cough_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
-
+    #check if player has enough points for the upgrade, increase lethality, subtract points from players wallet, increase the next upgrade's cost
     if points >= upgrade_cost_f:
         symptom_upgrades["cough"] += 1
         points -= upgrade_cost_f
@@ -358,7 +370,7 @@ def cough_upgrade():
         
 def cure_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
-
+    #check if player has enough points for the upgrade, increase reduce the cure percentage to 2/3 of itself, subtract points from players wallet, increase the next upgrade's cost
 
     if points >= upgrade_cost_g:
         misc_upgrades["cure"] += 1
@@ -372,7 +384,7 @@ def cure_upgrade():
 def mutate_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
 
-
+    #check if player has enough points for the upgrade, increase mutation chance, subtract points from players wallet, increase the next upgrade's cost
     if points >= upgrade_cost_h:
         misc_upgrades["mutation"] += 1
         points -= upgrade_cost_h
@@ -383,7 +395,7 @@ def mutate_upgrade():
 
 def tick_upgrade():
     global infections, infectivity, currentdate, points, upgrade_cost_a, upgrade_cost_b, upgrade_cost_c, upgrade_cost_d, upgrade_cost_e, upgrade_cost_f, upgrade_cost_g, upgrade_cost_h, upgrade_cost_i, infectivity_upgrades, symptom_upgrades, misc_upgrades, lethality, mutation, population, cure, dayspassed, deadpop, tickspeed
-
+    #check if player has enough points for the upgrade, decrease tick speed, subtract points from players wallet, increase the next upgrade's cost
     if points >= upgrade_cost_i:
         misc_upgrades["tick speed"] += 1
         points -= upgrade_cost_i
@@ -397,7 +409,7 @@ def tick_upgrade():
  
 
 
-
+#start the tick function when the code is first run
 t = threading.Timer(tickspeed, tick)
 t.start() 
 
