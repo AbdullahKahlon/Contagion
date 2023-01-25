@@ -44,4 +44,5 @@ maxing mutation chance, and letting random mutations carry you to late game.
 
 # MAKE SURE YOU INSTALL THE FONT SO THAT THE TEXT DISPLAYS PROPERLY. 
 Before running Contagion.py, double click FSEX300.ttf <br /> 
-Press install
+Press install <br /> 
+You're good to go!
