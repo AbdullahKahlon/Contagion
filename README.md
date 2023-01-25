@@ -11,6 +11,9 @@ The infect button on the bottom left grants you infections and points for every 
 You also earn infections and points passively every tick, the speed of which can be upgraded with <br /> 
 the tick speed upgrade. <br /> 
 <br /> 
+Infections grant you upgrade points, which can be used to strengthen different atributes of your <br /> 
+virus. <br /> 
+<br /> 
 The first column of upgrade buttons increase the infectivity of your virus, increasing the amount <br /> 
 of infections you earn per tick/click <br /> 
 <br /> 
@@ -35,7 +38,7 @@ current best strategy is to focus on buying infectivity upgrades early game unti
 maxing mutation chance, and letting random mutations carry you to late game.
 
 
-<<br /> 
+<br /> 
 <br /> 
 
 # MAKE SURE YOU INSTALL THE FONT SO THAT THE TEXT DISPLAYS PROPERLY. 
