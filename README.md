@@ -33,6 +33,7 @@ wipe out the entire population in 168 days <br />
 Points scale with infections but scale even higer with lethality, so if you feel like you are <br /> 
 earning points too slowly buy lethality and infectivity upgrades <br /> 
 <br /> 
+You're good to go!
 There are many ways you can strategize and customize your disease to get the fastest win, but the <br /> 
 current best strategy is to focus on buying infectivity upgrades early game until you can start <br /> 
 maxing mutation chance, and letting random mutations carry you to late game.
