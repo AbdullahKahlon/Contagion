@@ -1,4 +1,5 @@
 # Tutorial
+Open Contagion.py in IDLE and run it to play. <br /> 
 The goal of the game is to infect and kill the population of earth with your highly unstable virus <br /> 
 You are racing against the cure percentage, because if cure percentage reaches 100 then a vaccine <br /> 
 for your virus has been developed and you lose the game. <br /> 
@@ -34,11 +35,7 @@ current best strategy is to focus on buying infectivity upgrades early game unti
 maxing mutation chance, and letting random mutations carry you to late game.
 
 
-<br /> 
-<br /> 
-<br /> 
-<br /> 
-<br /> 
+<<br /> 
 <br /> 
 
 # MAKE SURE YOU INSTALL THE FONT SO THAT THE TEXT DISPLAYS PROPERLY. 
